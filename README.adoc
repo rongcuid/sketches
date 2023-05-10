@@ -6,4 +6,6 @@
 |Project |Description
 
 |sk01 |Just following link:https://sotrh.github.io/learn-wgpu[Learn Wgpu Beginner]
+
+|sk02 |link:https://sotrh.github.io/learn-wgpu[Learn Wgpu Intermediate]
 |===
