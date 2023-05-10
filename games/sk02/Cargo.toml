@@ -25,6 +25,7 @@ cgmath = "0.18"
 tobj = { version = "^4.0.0", features = [
     "async",
 ]}
+instant = "0.1"
 
 cfg-if = "1"
 
