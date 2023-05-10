@@ -2,9 +2,7 @@ mod model;
 mod resources;
 mod texture;
 
-use bytemuck::{Pod, Zeroable};
 use cgmath::prelude::*;
-use image::GenericImageView;
 use wgpu::util::DeviceExt;
 use winit::{event::*, event_loop::*, window::*};
 
@@ -93,7 +91,7 @@ impl Camera {
         let proj = cgmath::perspective(cgmath::Deg(self.fovy), self.aspect, self.znear, self.zfar);
 
         // 3.
-        return OPENGL_TO_WGPU_MATRIX * proj * view;
+        OPENGL_TO_WGPU_MATRIX * proj * view
     }
 }
 
@@ -117,7 +115,6 @@ struct CameraUniform {
 
 impl CameraUniform {
     fn new() -> Self {
-        use cgmath::SquareMatrix;
         Self {
             view_proj: cgmath::Matrix4::identity().into(),
         }
@@ -184,7 +181,6 @@ impl CameraController {
     }
 
     fn update_camera(&self, camera: &mut Camera) {
-        use cgmath::InnerSpace;
         let forward = camera.target - camera.eye;
         let forward_norm = forward.normalize();
         let forward_mag = forward.magnitude();
