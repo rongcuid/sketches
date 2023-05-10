@@ -266,6 +266,7 @@ struct State {
     instances: Vec<Instance>,
     instance_buffer: wgpu::Buffer,
     obj_model: model::Model,
+    debug_material: model::Material,
 }
 
 impl State {
@@ -530,7 +531,35 @@ impl State {
             resources::load_model("cube.obj", &device, &queue, &texture_bind_group_layout)
                 .await
                 .unwrap();
+        let debug_material = {
+            let diffuse_bytes = include_bytes!("../res/cobble-diffuse.png");
+            let normal_bytes = include_bytes!("../res/cobble-normal.png");
 
+            let diffuse_texture = texture::Texture::from_bytes(
+                &device,
+                &queue,
+                diffuse_bytes,
+                "res/alt-diffuse.png",
+                false,
+            )
+            .unwrap();
+            let normal_texture = texture::Texture::from_bytes(
+                &device,
+                &queue,
+                normal_bytes,
+                "res/alt-normal.png",
+                true,
+            )
+            .unwrap();
+
+            model::Material::new(
+                &device,
+                "alt-material",
+                diffuse_texture,
+                normal_texture,
+                &texture_bind_group_layout,
+            )
+        };
         Self {
             surface,
             device,
@@ -552,6 +581,8 @@ impl State {
             instances,
             instance_buffer,
             obj_model,
+            #[allow(dead_code)]
+            debug_material,
         }
     }
     pub fn window(&self) -> &Window {
@@ -647,6 +678,13 @@ impl State {
                 &self.camera_bind_group,
                 &self.light_bind_group,
             );
+            // render_pass.draw_model_instanced_with_material(
+            //     &self.obj_model,
+            //     &self.debug_material,
+            //     0..self.instances.len() as u32,
+            //     &self.camera_bind_group,
+            //     &self.light_bind_group,
+            // );
         }
         self.queue.submit(std::iter::once(encoder.finish()));
         output.present();
