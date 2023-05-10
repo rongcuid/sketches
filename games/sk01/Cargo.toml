@@ -16,6 +16,7 @@ log = "0.4"
 wgpu = "0.16"
 pollster = "0.3"
 bytemuck = { version = "1", features = ["derive"] }
+cgmath = "0.18"
 
 cfg-if = "1"
 
